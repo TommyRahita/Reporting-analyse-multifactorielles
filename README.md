@@ -2,4 +2,5 @@
 installation stremlit :
 pip install streamlit pandas plotly numpy openpyxl
 Pour lancer l'application lancer cette commande dans le repertoire du projet :
+.venv\Scripts\Activate.ps1
 py -m streamlit run src/index.py
