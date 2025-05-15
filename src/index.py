@@ -55,7 +55,6 @@ with st.expander("💡 Interprétation automatique des axes principaux"):
     👉 **Conclusion** : les trois premiers axes permettent une lecture claire des profils communaux : intensité des soins, diversité spécialisée, et dispositifs spécifiques.
     """)
 
-
 # Recalculer X après filtre
 X = df[cols_quant].fillna(0)
 
@@ -89,8 +88,15 @@ elif menu == "ACP":
         axes = [f"ACP{i+1}" for i in range(5)]
         axe_x = st.selectbox("Choisir l'axe X", axes, index=0)
         axe_y = st.selectbox("Choisir l'axe Y", axes, index=1)
-        fig_ind = px.scatter(df_indiv_filtered, x=axe_x, y=axe_y, hover_name="LIBGEO", color="DENS",
-                             title=f"Projection des communes dans le plan {axe_x} x {axe_y}")
+        fig_ind = px.scatter(
+            df_indiv_filtered,
+            x=axe_x,
+            y=axe_y,
+            hover_name="LIBGEO",
+            color=df_indiv_filtered["DENS"].astype(str),
+            category_orders={"color": ["1", "2", "3", "4", "5", "6", "7"]},
+            color_discrete_sequence=px.colors.qualitative.Set1,
+            title=f"Projection des communes dans le plan {axe_x} x {axe_y}")
         st.plotly_chart(fig_ind)
         st.dataframe(df_indiv_filtered[["LIBGEO"] + axes])
 
@@ -118,8 +124,6 @@ elif menu == "ACP":
 
         ax.set_title(f"Cercle des corrélations - {axe_x} x {axe_y}")
         st.pyplot(fig)
-
-        st.download_button("Exporter le tableau (CSV)", df_vars.to_csv(index=False).encode('utf-8'), file_name="acp_variables.csv", mime="text/csv")
 
         st.subheader("Tableau des valeurs propres et variance expliquée")
         df_eigen = pd.DataFrame({
