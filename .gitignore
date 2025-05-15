@@ -1,0 +1,26 @@
+# Environnements virtuels
+.venv/
+env/
+venv/
+
+# Fichiers Python compilés
+__pycache__/
+*.pyc
+
+# Données temporaires
+*.csv~
+*.xlsx~
+*.log
+
+# Dossiers de cache
+.ipynb_checkpoints/
+.cache/
+.mypy_cache/
+
+# Fichiers spécifiques à l’IDE
+.vscode/
+.idea/
+
+# Fichiers système
+.DS_Store
+Thumbs.db
