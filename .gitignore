@@ -1,7 +1,7 @@
 # Environnements virtuels
-.venv/
-env/
-venv/
+/.venv/
+/env/
+/venv/
 
 # Fichiers Python compilés
 __pycache__/
@@ -13,14 +13,18 @@ __pycache__/
 *.log
 
 # Dossiers de cache
-.ipynb_checkpoints/
-.cache/
-.mypy_cache/
+/.ipynb_checkpoints/
+/.cache/
+/.mypy_cache/
 
 # Fichiers spécifiques à l’IDE
-.vscode/
-.idea/
+/.vscode/
+/.idea/
 
 # Fichiers système
 .DS_Store
 Thumbs.db
+
+# (Optionnel) dossiers de données ou build
+/data/
+/build/
