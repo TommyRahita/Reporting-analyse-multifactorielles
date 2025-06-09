@@ -5,3 +5,10 @@ matplotlib
 scikit-learn
 plotly>=5.18.0
 kaleido>=0.2.1
+seaborn
+scipy
+geopandas
+shapely
+folium
+streamlit-folium
+geopy
