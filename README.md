@@ -1,13 +1,20 @@
+# Reporting Analyse Multifactorielles
+
 ## 📁 Structure du projet
 
 ```
 
 Reporting-analyse-multifactorielles/
-├── data/                         # Contient BASE_FINAL.csv
-├── src/                          # Contient le script principal index.py
+├── data/                         # Contient `donnees.csv` généré par `generer_base_finale.py`
+│   ├── Ensemble-com-2021_csv/    # CSV sources INSEE
+│   ├── grille_densite_7_niveaux_2024.csv
+│   ├── donnees.csv               # Base de données finale
+├── src/
+│   ├── generer_base_finale.py    # Script de préparation et agrégation des données
+│   └── index.py                  # Script Streamlit (ACP, clustering, CAH…)
 ├── requirements.txt              # Dépendances Python
-├── .gitignore                    # Fichiers à ignorer dans Git
-└── README.md                     # Ce fichier
+├── .gitignore                    # Fichiers / dossiers ignorés par Git
+└── README.md                     # Guide d’installation et d’utilisation
 
 ````
 
@@ -15,8 +22,8 @@ Reporting-analyse-multifactorielles/
 
 ## 🔧 Prérequis
 
-- Python 3.10 ou supérieur
-- `pip` ou `conda`
+- Python 3.10 ou supérieur  
+- `pip` ou `conda`  
 - Connexion internet pour installer les bibliothèques
 
 ---
@@ -26,21 +33,51 @@ Reporting-analyse-multifactorielles/
 ```bash
 git clone https://github.com/votre-utilisateur/Reporting-analyse-multifactorielles.git
 cd Reporting-analyse-multifactorielles
+
+# Créer un environnement virtuel
 python -m venv .venv
-source .venv/bin/activate        # sous macOS/Linux
-.venv\\Scripts\\activate         # sous Windows
+
+# Activer le venv
+# macOS / Linux
+source .venv/bin/activate
+
+# Windows (PowerShell)
+.venv\Scripts\Activate.ps1
+
+# Mettre à jour pip et installer les dépendances
+pip install --upgrade pip
 pip install -r requirements.txt
 ````
 
 ---
 
-## 🚀 Lancer l'application
+## 🚀 Génération des données
+
+Avant de lancer l’application, préparez la base finale :
+
+```bash
+# Depuis le dossier src/
+cd src
+python generer_base_finale.py
+```
+
+Cela va créer/mettre à jour `data/donnees.csv` avec :
+
+1. Agrégation des colonnes NB\_D\* en D1…D7
+2. Fusion avec la table des communes et DENS
+3. Calcul des ratios par 1 000 hab.
+4. Filtrage éventuel sur PMUN (10 000–20 000) si activé
+5. Sauvegarde de la base propre
+
+---
+
+## ▶️ Lancer l’application Streamlit
 
 ```bash
 streamlit run src/index.py
 ```
 
-Puis ouvrir dans le navigateur à l’adresse :
+Ouvrez ensuite votre navigateur à l’adresse :
 
 ```
 http://localhost:8501
@@ -50,29 +87,45 @@ http://localhost:8501
 
 ## 📊 Fonctionnalités principales
 
-* **ACP sur les équipements de santé** (jusqu’à 5 axes)
-* **Projection des communes** sur différents plans (choix de ACP1 à ACP5)
-* **Cercle des corrélations** dynamique pour les variables
-* **Filtrage interactif** des communes par niveau de densité
-* **Export CSV** des variables factorisées
-* **Tableaux de contributions, cos² et valeurs propres**
-* Bloc d’**interprétation automatique des axes**
+* **ACP comparées** : brut vs. par 1 000 hab.
+* **Scatter interactif** des communes (ACP1 vs ACP2), coloré par densité ou cluster
+* **Clustering k-means** (k paramétrable) et **CAH** (dendrogramme)
+* **Tableaux** : contributions, cos², valeurs propres
+* **Statistiques descriptives** : total, ratios, distributions
+* **Test Kruskal-Wallis** pour valider la relation clusters ↔ densité
+* **Cercle de corrélations** dynamique
+* *(Optionnel)* **Cartographie Folium** si `communes.geojson` est présent
 
 ---
 
-## 📦 Dépendances principales
+## 📦 Dépendances (`requirements.txt`)
 
-* streamlit
-* pandas
-* numpy
-* matplotlib
-* scikit-learn
-* plotly
+```
+streamlit
+pandas
+numpy
+matplotlib
+scikit-learn
+plotly>=5.18.0
+kaleido>=0.2.1
+seaborn
+scipy
+geopandas
+shapely
+folium
+streamlit-folium
+geopy
+```
 
 ---
 
 ## ✅ Bonnes pratiques
 
-* Ne pas versionner `.venv/` → déjà exclu via `.gitignore`
-* Les données sources doivent être placées dans `data/`
-* Le script principal est `src/index.py`
+* Ne pas versionner le dossier `.venv/` (inclus dans `.gitignore`)
+* Placer toutes les données source dans `data/`
+* Commiter & push avant redeploy sur Streamlit Cloud pour prendre en compte les changements
+* Utiliser `@st.experimental_memo` pour mettre en cache les chargements lourds (ex. géométrie simplifiée)
+
+---
+
+*Dernière mise à jour : 10 juin 2025*
